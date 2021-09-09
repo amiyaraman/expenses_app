@@ -9,21 +9,41 @@ import 'eachrowview.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transaction;
+  final Function deletets;
 
-  TransactionList(this.transaction);
+  TransactionList(this.transaction, this.deletets);
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 300,
       child: !transaction.isEmpty
           ? ListView.builder(
               itemBuilder: (BuildContext context, int index) {
                 return Card(
-                  child: EachRowView(
-                      transaction[index].amount.toString(),
+                  elevation: 5,
+                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 30,
+                      child: Padding(
+                        padding: EdgeInsets.all(6),
+                        child: FittedBox(
+                            child: Text('Rs ${transaction[index].amount}')),
+                      ),
+                    ),
+                    title: Text(
                       transaction[index].title,
-                      transaction[index].id,
-                      transaction[index].date),
+                      style: Theme.of(context).textTheme.title,
+                    ),
+                    subtitle: Text(
+                        DateFormat.yMMMd().format(transaction[index].date)),
+                    trailing: IconButton(
+                      onPressed: () {
+                        deletets(transaction[index].id);
+                      },
+                      icon: Icon(Icons.delete),
+                      color: Theme.of(context).errorColor,
+                    ),
+                  ),
                 );
               },
               itemCount: transaction.length,
